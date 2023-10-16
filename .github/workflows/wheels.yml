@@ -99,17 +99,19 @@ jobs:
 
       - name: Build wheels
         env:
+          CIBW_PLATFORM: windows
           CIBW_ARCHS: AMD64
           CIBW_ARCHS_WINDOWS: AMD64
           CIBW_BUILD: pp39-win_amd64
-        run: python -m cibuildwheel --output-dir wheelhouse
+        run: python -m cibuildwheel --output-dir wheelhouse ./dist/${{ needs.build_sdist.outputs.sdist_file }}
 
 #      - name: Build wheels
 #        uses: pypa/cibuildwheel@v2.16.2
 #        with:
-#          package-dir: ./dist/${{ needs.build_sdist.outputs.sdist_file }}
-##          output-dir: wheelhouse
+#          package-dir: ./dist/
+#          output-dir: wheelhouse
 #        env:
+#          CIBW_BUILD_VERBOSITY: 1
 #          CIBW_PRERELEASE_PYTHONS: True
 #          CIBW_ARCHS: AMD64
 #          CIBW_ARCHS_WINDOWS: AMD64
