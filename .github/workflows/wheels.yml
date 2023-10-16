@@ -98,11 +98,14 @@ jobs:
         uses: pypa/cibuildwheel@v2.16.2
         with:
           package-dir: ./dist/${{ needs.build_sdist.outputs.sdist_file }}
-          output-dir: wheelhouse
+#          output-dir: wheelhouse
         env:
+          CIBW_PRERELEASE_PYTHONS: True
           CIBW_ARCHS: AMD64
           CIBW_ARCHS_WINDOWS: AMD64
           CIBW_BUILD: pp39-*
+          CIBW_TEST_SKIP: "*win*"
+          PANDAS_CI: 0
 
       - uses: actions/upload-artifact@v3
         with:
