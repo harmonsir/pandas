@@ -103,7 +103,7 @@ jobs:
           CIBW_PRERELEASE_PYTHONS: True
           CIBW_ARCHS: AMD64
           CIBW_ARCHS_WINDOWS: AMD64
-          CIBW_BUILD: pp39-*
+          CIBW_BUILD: pp39-win_amd64
           CIBW_TEST_SKIP: "*win*"
           PANDAS_CI: 0
 
