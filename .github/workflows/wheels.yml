@@ -96,11 +96,6 @@ jobs:
         run: |
           tar -xzf ./dist/${{ env.sdist_name }} -C ./dist
 
-      - name: Output sdist name (macOS)
-        id: save-path2
-        shell: bash -el {0}
-        run: echo "sdist_name=$(cd ./dist && ls -d */)" >> "$GITHUB_ENV"
-
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
@@ -109,7 +104,8 @@ jobs:
       - name: Install cibuildwheel
         run: |
           python.exe -m pip install --upgrade pip
-          python -m pip install cibuildwheel==2.16.2 wheel
+          python -m pip install -q cibuildwheel==2.16.2 wheel
+          pip install https://files.pythonhosted.org/packages/be/13/28dad1f91605d519b6899f7a26ab61938ecbd9e1770e219e7030b15d58e4/numpy-1.26.1-pp39-pypy39_pp73-win_amd64.whl
 
 #      - name: Build wheels
 #        env:
@@ -119,7 +115,7 @@ jobs:
 #          CIBW_BUILD: ${{ matrix.python[0] }}-${{ matrix.buildplat[1] }}
 #        run: |
 #          ls
-#          ls dist/$GITHUB_OUTPUT
+#          ls dist/$GITHUB_ENV
 #          pip install -q -r requirements-dev.txt
 #          python setup.py bdist_wheel
 #          python -m cibuildwheel --output-dir wheelhouse ./dist/${{ needs.build_sdist.outputs.sdist_file }}
