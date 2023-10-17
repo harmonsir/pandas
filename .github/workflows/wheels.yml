@@ -101,8 +101,15 @@ jobs:
         shell: bash -el {0}
         run: echo "sdist_name=$(cd ./dist && ls -d */)" >> "$GITHUB_ENV"
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 'pypy3.9'
+
       - name: Install cibuildwheel
-        run: python -m pip install cibuildwheel==2.16.2
+        run: |
+          python.exe -m pip install --upgrade pip
+          python -m pip install cibuildwheel==2.16.2 wheel
 
       - name: Build wheels
         env:
@@ -113,7 +120,7 @@ jobs:
         run: |
           ls
           ls dist/$GITHUB_OUTPUT
-          pip install -r requirements-dev.txt
+          pip install -q -r requirements-dev.txt
           python setup.py bdist_wheel
 #          python -m cibuildwheel --output-dir wheelhouse ./dist/${{ needs.build_sdist.outputs.sdist_file }}
 
