@@ -111,7 +111,7 @@ jobs:
           CIBW_ARCHS: AMD64
           CIBW_ARCHS_WINDOWS: AMD64
           CIBW_BUILD: ${{ matrix.python[0] }}-${{ matrix.buildplat[1] }}
-        run: python -m cibuildwheel --output-dir wheelhouse ./dist
+        run: python -m cibuildwheel --output-dir wheelhouse .
 
 #      - name: Build wheels
 #        uses: pypa/cibuildwheel@v2.16.2
