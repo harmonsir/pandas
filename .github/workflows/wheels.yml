@@ -24,7 +24,8 @@ jobs:
       - name: Checkout pandas
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          submodules: true
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -70,7 +71,8 @@ jobs:
       - name: Checkout pandas
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 1
+          submodules: true
 
       # TODO: Build wheels from sdist again
       # There's some sort of weird race condition?
