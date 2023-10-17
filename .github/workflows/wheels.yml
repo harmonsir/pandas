@@ -112,9 +112,10 @@ jobs:
           CIBW_BUILD: ${{ matrix.python[0] }}-${{ matrix.buildplat[1] }}
         run: |
           ls
-          ls dist
-          cp setup.py pyproject.toml dist
-          python -m cibuildwheel --output-dir wheelhouse ./dist/
+          ls dist/$GITHUB_OUTPUT
+          pip install -r requirements-dev.txt
+          python setup.py bdist_wheel
+#          python -m cibuildwheel --output-dir wheelhouse ./dist/${{ needs.build_sdist.outputs.sdist_file }}
 
 #      - name: Build wheels
 #        uses: pypa/cibuildwheel@v2.16.2
@@ -132,4 +133,6 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: ${{ matrix.python[0] }}-${{ startsWith(matrix.buildplat[1], 'macosx') && 'macosx' || matrix.buildplat[1] }}
-          path: ./wheelhouse/*.whl
+          path: |
+            ./wheelhouse/*.whl
+            ./*.whl
