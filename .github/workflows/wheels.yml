@@ -63,7 +63,7 @@ jobs:
         buildplat:
         - [windows-2022, win_amd64]
         # TODO: support PyPy?
-        python: [["pp39", "3.9"]]
+        python: [["pp39", "3.9"],["pp310", "3.10"]]
     env:
       IS_PUSH: ${{ github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') }}
       IS_SCHEDULE_DISPATCH: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' }}
@@ -106,31 +106,32 @@ jobs:
       - name: Install cibuildwheel
         run: |
           python.exe -m pip install --upgrade pip
-          python -m pip install -q cibuildwheel==2.16.2 wheel
-          pip install https://files.pythonhosted.org/packages/be/13/28dad1f91605d519b6899f7a26ab61938ecbd9e1770e219e7030b15d58e4/numpy-1.26.1-pp39-pypy39_pp73-win_amd64.whl
+          python -m pip install -q cibuildwheel==2.16.2 wheel numpy
+#          pip install https://files.pythonhosted.org/packages/be/13/28dad1f91605d519b6899f7a26ab61938ecbd9e1770e219e7030b15d58e4/numpy-1.26.1-pp39-pypy39_pp73-win_amd64.whl
+
+#      - name: Build wheels
+#        env:
+#          CIBW_PLATFORM: windows
+#          CIBW_ARCHS: AMD64
+#          CIBW_ARCHS_WINDOWS: AMD64
+#          CIBW_BUILD: ${{ matrix.python[0] }}-${{ matrix.buildplat[1] }}
+#        run: |
+#          ls
+#          ls dist/$GITHUB_ENV
+#          mkdir wheelhouse
+#          pip install -q -r requirements-dev.txt
+#          python setup.py bdist_wheel
+#          python -m cibuildwheel --output-dir wheelhouse ./dist/${{ needs.build_sdist.outputs.sdist_file }}
 
       - name: Build wheels
+        uses: pypa/cibuildwheel@v2.16.2
+        with:
+         package-dir: ./dist/${{ matrix.buildplat[1] == 'macosx_*' && env.sdist_name || needs.build_sdist.outputs.sdist_file }}
         env:
           CIBW_PLATFORM: windows
           CIBW_ARCHS: AMD64
           CIBW_ARCHS_WINDOWS: AMD64
           CIBW_BUILD: ${{ matrix.python[0] }}-${{ matrix.buildplat[1] }}
-        run: |
-          ls
-          ls dist/$GITHUB_ENV
-          mkdir wheelhouse
-          pip install -q -r requirements-dev.txt
-          python setup.py bdist_wheel
-          python -m cibuildwheel --output-dir wheelhouse ./dist/${{ needs.build_sdist.outputs.sdist_file }}
-
-#      - name: Build wheels
-#        uses: pypa/cibuildwheel@v2.16.2
-#        with:
-#         package-dir: ./dist/${{ matrix.buildplat[1] == 'macosx_*' && env.sdist_name || needs.build_sdist.outputs.sdist_file }}
-#        env:
-#          CIBW_PRERELEASE_PYTHONS: True
-#          CIBW_BUILD: ${{ matrix.python[0] }}-${{ matrix.buildplat[1] }}
-
 
       - name: Validate wheel RECORD
         shell: bash -el {0}
