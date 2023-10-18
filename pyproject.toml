@@ -165,6 +165,7 @@ test-skip = "*_arm64"
 [tool.cibuildwheel.windows]
 before-build = "pip install delvewheel"
 repair-wheel-command = "delvewheel repair -w {dest_dir} {wheel}"
+before-test = "COPY {dest_dir}/*.whl {package}/wheelhouse"
 
 [[tool.cibuildwheel.overrides]]
 select = "*-musllinux*"
